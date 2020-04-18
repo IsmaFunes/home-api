@@ -1,6 +1,4 @@
 const Posts = require('../models/post');
-const {ErrorHandler} = require('../error');
-
 
 const PostsController = {};
 PostsController.createPost = async (req, res, next) => {
@@ -10,7 +8,6 @@ PostsController.createPost = async (req, res, next) => {
             description: req.body.description,
             type: req.body.type,
             canComment: req.body.canComment,
-            isDeleted: false,
             author: req.body.authorId
         });
         await post.save();
@@ -27,7 +24,7 @@ PostsController.commentPost = async (req, res) => {
 
 PostsController.deactivate = async (req, res, next) => {
     try {
-        const modifiedPost = await Posts.findByIdAndUpdate(req.params.postId, {canComment: false}, {new: true});
+        const modifiedPost = await Posts.findByIdAndUpdate(req.params.postId, {canComment: false}, {new: true}).exec();
         return res.send(modifiedPost);
     } catch (error) {
         next(error);
@@ -37,7 +34,7 @@ PostsController.deactivate = async (req, res, next) => {
 
 PostsController.delete = async (req, res, next) => {
     try {
-        const modifiedPost = await Posts.findByIdAndUpdate(req.params.postId, {isDeleted: true}, {new: true});
+        const modifiedPost = await (await Posts.findByIdAndUpdate(req.params.postId, {isDeleted: true}, {new: true})).exec();
         return res.send(modifiedPost);
     
     } catch (error) {
@@ -47,7 +44,7 @@ PostsController.delete = async (req, res, next) => {
 
 PostsController.getAll = async (req, res, next) => {
     try{
-        const posts = await Posts.find({ isDeleted: false });
+        const posts = await Posts.find({ isDeleted: false }).exec();
         return res.send(posts);
     } catch (error){
         next(error);
