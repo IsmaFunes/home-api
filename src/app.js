@@ -8,7 +8,7 @@ const authVerificator = require('./middlewares/auth-verify');
 var app = express();
 mongoose.connect('mongodb+srv://admin:admin@home-main-db-pviqq.gcp.mongodb.net/test', {useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
     app.use(bodyParser.json());
-    app.use(morgan('tiny'));
+    app.use(morgan('dev'));
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use('/posts', authVerificator, require('./routes/posts.route'));
     app.use('/auth', require('./routes/auth.route'));

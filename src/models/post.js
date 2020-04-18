@@ -9,8 +9,9 @@ const Post = new Schema({
     canComment: {type: Boolean, default: true},
     isDeleted: {type: Boolean, default: false},
     author: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment', required: true}],
-    likes: {type: Number, default: 0}
+    comments: [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}],
+    likes: {type: Number, default: 0, min: 0},
+    dislikes: {type: Number, default: 0, min: 0}
 });
 const PostModel = mongoose.model('Post', Post);
 module.exports = PostModel;
