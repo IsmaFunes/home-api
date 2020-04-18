@@ -1,6 +1,7 @@
 
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+const {ErrorHandler} = require('../error');
 
 const AuthController = {};
 
@@ -35,16 +36,10 @@ AuthController.login = async (req, res, next) => {
         const user = await User.findOne({
             userName
         });
-        if (!user)
-            return res.status(400).json({
-                message: "User Not Exist"
-            });
         const isMatch = await user.comparePassword(password);
-        if (!isMatch)
-            return res.status(400).json({
-                message: "Incorrect Password!"
-            });
-
+        if (!user || !isMatch){
+            throw new ErrorHandler(400, 'User does not exist or the password is incorrect'); 
+        }
         const payload = {
             user: {
                 id: user.id
