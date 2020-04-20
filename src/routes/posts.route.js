@@ -1,10 +1,13 @@
 const express = require("express")
 const PostsRoute = express.Router();
 const postController = require('../controllers/post.controller');
-PostsRoute.route('/create').post(postController.createPost);
+const authVerify = require('../middlewares/auth-verify');
+
+PostsRoute.route('/create').post(authVerify, postController.createPost);
 PostsRoute.get('', postController.getAll);
-PostsRoute.delete('/:postId', postController.delete);
-PostsRoute.put('/:postId/comment', postController.commentPost)
-PostsRoute.put('/:postId/like', postController.like)
-PostsRoute.put('/:postId/dislike', postController.dislike)
+PostsRoute.delete('/:postId', authVerify, postController.delete);
+PostsRoute.put('/:postId/comment', authVerify, postController.commentPost);
+PostsRoute.put('/:postId/like', authVerify,postController.like);
+PostsRoute.get('/:postId', postController.getPost);
+
 module.exports = PostsRoute;

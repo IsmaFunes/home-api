@@ -3,14 +3,15 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const morgan = require('morgan');
 const {handleError} = require('./error');
-const authVerificator = require('./middlewares/auth-verify');
+const cors = require('cors');
 
 var app = express();
 mongoose.connect('mongodb+srv://admin:admin@home-main-db-pviqq.gcp.mongodb.net/test', {useNewUrlParser: true, useUnifiedTopology: true}).then(db => {
+    app.use(cors())
     app.use(bodyParser.json());
     app.use(morgan('dev'));
     app.use(bodyParser.urlencoded({ extended: true }));
-    app.use('/posts', authVerificator, require('./routes/posts.route'));
+    app.use('/posts', require('./routes/posts.route'));
     app.use('/auth', require('./routes/auth.route'));
     app.use((err, req, res, next) => {
         handleError(err, res);

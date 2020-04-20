@@ -81,6 +81,31 @@ PostsController.getAll = async (req, res, next) => {
 
 }
 
+PostsController.getPost = async (req, res, next) => {
+    try {
+        const post = await Posts.findById(req.params.postId)
+                    .populate({
+                        path:  'author', 
+                        select: {names: true, surName: true, userName: true}
+                    })
+                    .populate({
+                        path: 'comments', 
+                        select: {comment: true, author: true},
+                        populate: {
+                            path: 'author',
+                            select: {
+                                userName: true
+                            }
+                        }
+                    })
+                    .lean();
+        return res.send(post);
+    } catch (error) {
+        next(error);
+    }
+
+}
+
 
 PostsController.like = async(req,res,next) => {
     try {
