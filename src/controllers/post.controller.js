@@ -117,14 +117,4 @@ PostsController.like = async(req,res,next) => {
     }
 }
 
-PostsController.dislike = async(req,res,next) => {
-    try {
-        const modifiedPost = await Posts.findByIdAndUpdate(req.params.postId, { $inc: {dislikes: 1 } }, { new: true });
-        return res.send(modifiedPost);
-
-    } catch (error) {
-        next(error);
-    }
-}
-
 module.exports = PostsController;
